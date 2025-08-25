@@ -1,0 +1,107 @@
+@charset "UTF-8";
+body {
+  margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f9f9f9;
+  color: #333;
+}
+
+/* 헤더 */
+header {
+  background: #0078d7;
+  color: white;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 { margin: 0; }
+
+nav a {
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a.active, nav a:hover {
+  text-decoration: underline;
+}
+
+/* 배너 */
+.banner {
+  background: url("https://picsum.photos/1200/400?shopping") no-repeat center/cover;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+/* 상품 섹션 */
+.product-section { padding: 40px; background: #fff; }
+.products { display: flex; gap: 20px; }
+.product {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  text-align: center;
+  padding: 15px;
+}
+.product img { width: 100%; border-radius: 6px; }
+.product h3 { margin: 10px 0 5px; }
+.product .price { font-weight: bold; color: #0078d7; }
+
+/* 게시판 */
+.board-container { width: 80%; margin: 30px auto; background: #fff; padding: 20px; border-radius: 10px; }
+.board-container table { width: 100%; border-collapse: collapse; }
+.board-container th, .board-container td {
+  border-bottom: 1px solid #ddd; padding: 12px; text-align: center;
+}
+.board-container th { background: #f1f1f1; }
+/* .board-container .board_title a { color: #0078d7; text-decoration: none; } #0078d7*/
+#board_title {color: #0078d7; text-decoration: none;}
+.board-container a:hover { text-decoration: underline; }
+.board-footer { margin-top: 15px; text-align: right; }
+
+/* 글 보기 */
+.post-view h3 { margin: 10px 0; }
+.post-view .meta { color: #666; font-size: 0.9rem; }
+.post-view .content { margin: 20px 0; padding: 15px; background: #fafafa; border-radius: 6px; }
+.actions { margin-top: 15px; }
+.actions .btn { margin-right: 10px; }
+
+/* 폼 */
+.form-container {
+  width: 400px; margin: 40px auto; background: #fff;
+  padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.form-container h2 { text-align: center; margin-bottom: 20px; }
+.form-container input, .form-container textarea {
+  width: 100%; padding: 12px; margin-bottom: 15px;
+  border: 1px solid #ddd; border-radius: 6px;
+}
+textarea { height: 150px; resize: none; }
+
+/* 버튼 */
+
+
+.btn {
+  background: #0078d7; color: white; padding: 10px 20px;
+  border: none; border-radius: 6px; cursor: pointer;
+}
+
+
+.btn:hover { background: #005ea6; }
+
+/* 푸터 */
+footer {
+  background: #333; color: #ccc; text-align: center;
+  padding: 20px; margin-top: 40px;
+}
+
+
