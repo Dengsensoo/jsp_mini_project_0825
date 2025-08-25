@@ -15,6 +15,7 @@ import java.util.List;
 import com.dengsensoo.dao.BoardDao;
 import com.dengsensoo.dao.MemberDao;
 import com.dengsensoo.dto.BoardDto;
+import com.dengsensoo.dto.BoardMemberDto;
 
 @WebServlet("*.do")
 public class BoardController extends HttpServlet {
@@ -46,19 +47,36 @@ public class BoardController extends HttpServlet {
 		BoardDao boardDao = new BoardDao();
 		MemberDao memberDao = new MemberDao();
 		List<BoardDto> bDtos = new ArrayList<BoardDto>();
+		List<BoardMemberDto> bmDtos = new ArrayList<BoardMemberDto>();
+		HttpSession session = null;
 
 		if(comm.equals("/list.do")) { //게시판 모든 글 목록 보기 요청
 			bDtos = boardDao.boardList(); //게시판 모든 글이 포함된 ArrayList 반환
 			request.setAttribute("bDtos", bDtos);
 			viewPage = "boardList.jsp";
 		} else if(comm.equals("/write.do")) { //글 쓰기 폼으로 이동
-			viewPage = "writeForm.jsp";
+			session = request.getSession();
+			String sid = (String) session.getAttribute("sessionId");
+			if(sid != null) { //로그인 한 상태
+				viewPage = "writeForm.jsp";
+			} else { //로그인 하지 않은 상태
+				response.sendRedirect("login.do?msg=2");
+				return; //멈춤
+			}
 		} else if(comm.equals("/modify.do")) { //글 수정 폼으로 이동
+			session = request.getSession();
+			String sid = (String) session.getAttribute("sessionId");
+			
 			String bnum = request.getParameter("bnum"); //수정하려고 하는 글의 글번호
 			BoardDto boardDto = boardDao.contentView(bnum); //수정하려고 하는 글 가져오기
 			
-			request.setAttribute("boardDto", boardDto);			
-			viewPage = "modifyForm.jsp";
+			if(boardDto.getMemberid().equals(sid)) { //참이면 수정, 삭제 가능
+				request.setAttribute("boardDto", boardDto);			
+				viewPage = "modifyForm.jsp";
+			} else {
+				response.sendRedirect("modifyForm.jsp?error=1");
+				return;
+			}
 		} else if(comm.equals("/modifyOk.do")) { //글 수정한 후 글 내용 확인 페이지로 이동
 			request.setCharacterEncoding("utf-8");
 			
@@ -83,6 +101,8 @@ public class BoardController extends HttpServlet {
 			viewPage = "list.do";
 		} else if(comm.equals("/content.do")) { //글 목록에서 선택된 글 내용이 보여지는 페이지로 이동
 			String bnum = request.getParameter("bnum"); //유저가 선택한 글의 번호
+			
+			boardDao.updateBhit(bnum); //조회수 증가
 
 			BoardDto boardDto = boardDao.contentView(bnum); //boardDto 반환(유저가 선택한 글번호에 해당하는 dto반환)
 
@@ -115,8 +135,8 @@ public class BoardController extends HttpServlet {
 			String loginPw = request.getParameter("password");
 			
 			int loginFlag = memberDao.loginCheck(loginId, loginPw);
-			if(loginFlag == 1) {
-				HttpSession session = request.getSession();
+			if(loginFlag == 1) { // 로그인 성공이면 1, 실패면 0이 반환
+				session = request.getSession();
 				session.setAttribute("sessionId", loginId);
 			} else {
 				response.sendRedirect("login.do?msg=login_fail");

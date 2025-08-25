@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dengsensoo.dto.BoardDto;
+import com.dengsensoo.dto.BoardMemberDto;
+import com.dengsensoo.dto.MemberDto;
 
 public class BoardDao {
 	
@@ -21,7 +23,14 @@ public class BoardDao {
 	ResultSet rs = null;
 	
 	public List<BoardDto> boardList() { // 게시판의 모든 글 리스트를 가져와서 반환하는 메소드
-		String sql = "SELECT * FROM board ORDER BY bnum DESC";
+		//String sql = "SELECT * FROM board ORDER BY bnum DESC";
+		String sql = "SELECT row_number() OVER (order by bnum ASC) AS bno,"
+				+ "b.bnum, b.btitle, b.bcontent, b.memberid, m.memberemail, b.bdate, b.bhit "
+				+ "FROM board b "
+				+ "INNER JOIN members m ON b.memberid = m.memberid"
+				+ " ORDER BY bno DESC";
+				//members 테이블과 board 테이블의 조인 SQL문
+				//List<BoardMemberDto> bmDtos = new ArrayList<BoardMemberDto>();
 		List<BoardDto> bDtos = new ArrayList<BoardDto>();
 		
 		try {
@@ -38,9 +47,18 @@ public class BoardDao {
 				String bcontent = rs.getString("bcontent");
 				String memberid = rs.getString("memberid");
 				int bhit = rs.getInt("bhit");
-				String bdate = rs.getString("bdate");
+				String bdate = rs.getString("bdate");				
+				String memberemail = rs.getString("memberemail");
 				
-				BoardDto bDto = new BoardDto(bnum, btitle, bcontent, memberid, bhit, bdate); // Dto에서 생성자를 만들었기 때문에 바로 매개변수를 넣으면 초기화가 된다.
+				int bno = rs.getInt("bno");
+				
+				MemberDto memberDto = new MemberDto();
+				memberDto.setMemberid(memberid);
+				memberDto.setMemberemail(memberemail); 
+				
+				BoardDto bDto = new BoardDto(bno, bnum, btitle, bcontent, memberid, bhit, bdate, memberDto);
+				// BoardMemberDto bmDto = new BoardMemberDto(bnum, btitle, bcontent, memberid, memberemail, bhit, bdate);
+				// Dto에서 생성자를 만들었기 때문에 바로 매개변수를 넣으면 초기화가 된다.
 				bDtos.add(bDto);
 				
 			}
@@ -213,5 +231,34 @@ public class BoardDao {
 		}
 	}
 	
-	
+	public void updateBhit(String bnum) {
+		String sql = "UPDATE board SET bhit=bhit+1 WHERE bnum=?"; //조회수가 1씩 늘어나는 sql문
+		
+		try {
+			Class.forName(driverName); //MySQL 드라이버 클래스 불러오기			
+			conn = DriverManager.getConnection(url, username, password);
+			//커넥션이 메모리 생성(DB와 연결 커넥션 conn 생성)
+			
+			pstmt = conn.prepareStatement(sql); //pstmt 객체 생성(sql 삽입)			
+			pstmt.setString(1, bnum);			
+			
+			pstmt.executeUpdate(); //성공하면 sqlResult 값이 1로 변환
+			// SQL문을 DB에서 실행->성공하면 1이 반환, 실패면 1이 아닌 값 0이 반환
+			
+		} catch (Exception e) {
+			System.out.println("DB 에러 발생! 조회수 수정 실패!");
+			e.printStackTrace(); //에러 내용 출력
+		} finally { //에러의 발생여부와 상관 없이 Connection 닫기 실행 
+			try {
+				if(pstmt != null) { //stmt가 null 이 아니면 닫기(conn 닫기 보다 먼저 실행)
+					pstmt.close();
+				}				
+				if(conn != null) { //Connection이 null 이 아닐 때만 닫기
+					conn.close();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

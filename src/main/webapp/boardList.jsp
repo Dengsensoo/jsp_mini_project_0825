@@ -7,26 +7,27 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>게시판</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header>
-  <h1>MyShop</h1>
-  <nav>
-    <a href="index.do">홈</a>
-    <a href="list.do">게시판</a>
-  </nav>
-</header>
+<%@ include file="include/header.jsp" %>
 
 <div class="board-container">
-  <h2>게시판</h2>
+	<span style="color:blue;">
+      	<c:if test="${not empty sessionScope.sessionId }">
+      		<b>${sessionScope.sessionId}</b>님 로그인 중
+      	</c:if>
+    </span>
+  <h2>게시판</h2>	
   <table>
       <thead>
         <tr>
           <th>번호</th>
           <th>제목</th>
           <th>작성자</th>
+          <th>이메일</th>
           <th>작성일</th>
           <th>조회수</th>
         </tr>
@@ -34,8 +35,8 @@
       <tbody>
         <c:forEach items="${bDtos}" var="bDto">
         <tr>
-          <td>${bDto.bnum }</td>
-          <td>
+          <td>${bDto.bno }</td> <!-- 글 번호 -->
+          <td> <!-- 글 제목 -->
           <c:choose>
           	<c:when test="${fn:length(bDto.btitle) > 35}">
           		<a href="content.do?bnum=${bDto.bnum }" id="board_title">${fn:substring(bDto.btitle, 0, 35)}...</a>
@@ -45,9 +46,10 @@
           	</c:otherwise>
           </c:choose>
           </td>
-          <td>${bDto.memberid }</td>
-          <td>${fn:substring(bDto.bdate,0,10)}</td>
-          <td>${bDto.bhit }</td>
+          <td>${bDto.memberid }</td> <!-- 글 작성자 -->
+          <td>${bDto.memberDto.memberemail }</td> <!-- 작성자 이메일 -->
+          <td>${fn:substring(bDto.bdate,0,10)}</td> <!-- 글 등록일 -->
+          <td>${bDto.bhit }</td> <!-- 글 조회수 -->
         </tr>
         </c:forEach>
         <!-- 추가 게시글 -->
@@ -58,6 +60,6 @@
   </div>
 </div>
 
-<footer>&copy; 2025 MyShop</footer>
+<%@ include file="include/footer.jsp" %>
 </body>
 </html>

@@ -4,18 +4,12 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>쇼핑몰 메인</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header>
-  <h1>MyShop</h1>
-  <nav>
-    <a href="main.html">홈</a>
-    <a href="board.html">게시판</a>
-    <a href="login.html">로그인</a>
-  </nav>
-</header>
+<%@ include file="include/header.jsp" %>
 
 <div class="banner">✨ 여름 특가 세일! 최대 50% 할인 ✨</div>
 
@@ -35,6 +29,6 @@
   </div>
 </section>
 
-<footer>&copy; 2025 MyShop. All Rights Reserved.</footer>
+<%@ include file="include/footer.jsp" %>
 </body>
 </html>

@@ -38,7 +38,7 @@ public class MemberDao {
 			}
 			
 		} catch (Exception e) {
-			System.out.println("DB 에러 발생! 게시판 글 가져오기 실패!");
+			System.out.println("DB 에러 발생! 로그인 실패!");
 			e.printStackTrace(); //에러 내용 출력
 		} finally { //에러의 발생여부와 상관 없이 Connection 닫기 실행 
 			try {

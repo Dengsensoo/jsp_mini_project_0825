@@ -4,17 +4,12 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>게시판 글 쓰기</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header>
-  <h1>MyShop</h1>
-  <nav>
-    <a href="index.do">홈</a>
-    <a href="list.do">게시판</a>
-  </nav>
-</header>
+<%@ include file="include/header.jsp" %>
 
 <div class="form-container">
   <h2>글쓰기</h2>
@@ -30,7 +25,7 @@
 
       <div class="form-group">
         <label for="author">작성자</label>
-        <input type="text" id="author" name="author" placeholder="작성자명을 입력하세요" required />
+        <input type="text" id="author" name="author" value="${sessionScope.sessionId }" readonly />
       </div>
 
       <div class="form-group">
@@ -46,6 +41,6 @@
   </form>
 </div>
 
-<footer>&copy; 2025 MyShop</footer>
+<%@ include file="include/footer.jsp" %>
 </body>
 </html>
